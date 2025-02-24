@@ -8,7 +8,11 @@ from PIL import Image
 from rosbags.image import message_to_cvimage
 
 
-with Reader("/home/charlie/Desktop/PerpetuaLocobotDetector/rosbag2_2025_02_21-15_46_30") as reader:
+ROSBAG_PATH = "./rosbag2_2025_02_21-15_46_30"
+EXPORT_PATH = "./converted"
+os.makedirs(EXPORT_PATH, exist_ok=True)
+
+with Reader(ROSBAG_PATH) as reader:
     temp = reader.topics
     image_msg = temp["/locobot/camera/color/image_raw"].connections
 
@@ -22,5 +26,4 @@ with Reader("/home/charlie/Desktop/PerpetuaLocobotDetector/rosbag2_2025_02_21-15
         img = message_to_cvimage(msg)
 
         result = Image.fromarray(img)
-        os.makedirs("./converted", exist_ok=True)
-        result.save(f"/home/charlie/Desktop/PerpetuaLocobotDetector/converted/{ros2_time_to_string(timestamp)}.jpg")
+        result.save(f"{EXPORT_PATH}/{ros2_time_to_string(timestamp)}.jpg")
